@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // *** IMPORTANT: CHANGE THIS URL TO YOUR DEPLOYED SERVER URL ***
     // For local testing, use: ws://localhost:8080
     // For production, use: wss://your-app-name.onrender.com
-    const WS_URL = 'ws://localhost:8080'; 
+    const WS_URL = 'wss://sudoku3.onrender.com'; 
 
     function connectWebSocket() {
         socket = new WebSocket(WS_URL);
@@ -203,4 +203,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial connection check
     showScreen('start-screen');
+
 });
