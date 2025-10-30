@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <link rel="stylesheet" href="sudoku.css">
+</head>
+<body>
+    <div id="alert-overlay" class="hidden">
+        <div id="custom-alert" class="alert-message"></div>
+    </div>
+    <div id="main-wrapper">
+        <div id="game-container">
+            <a href="index.html" id="home-btn" title="Go to Home Page">🏠</a>
+            <h1>Sudoku</h1>
+            <div id="stats-container">
+                <div id="timer">00:00</div>
+                <div id="mistakes">Mistakes: 0 / 3</div>
+            </div>
+            <div id="sudoku-grid"></div>
+            <div id="controls">
+                <button id="new-game-btn">New Game</button>
+                <button id="solve-btn">Solve</button>
+                <button id="pause-btn">Pause</button>
+                <button id="reset-btn">Reset</button>
+                <button id="print-btn">Print</button>
+            </div>
+        </div>
+        <div id="opponent-container" class="hidden">
+            <h2>Opponent's Progress</h2>
+            <div id="opponent-progress-bar"><div id="opponent-progress"></div></div>
+            <div id="opponent-progress-text">0 / 81</div>
+        </div>
+    </div>
+    <script src="sudoku-script.js"></script>
+</body>
+</html>

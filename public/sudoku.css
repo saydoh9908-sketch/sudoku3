@@ -1,0 +1,495 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    gap: 20px;
+}
+
+#main-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+#game-container {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative; /* Needed for positioning the home button */
+}
+
+h1 {
+    color: #333;
+}
+
+#stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 450px;
+    margin: 0 auto 10px auto;
+}
+
+#timer {
+    font-size: 1.8em;
+    font-weight: 500;
+    color: #333;
+}
+
+#mistakes {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: #dc3545;
+}
+
+/* --- Home Button --- */
+#home-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    font-size: 1.5em;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+#sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 450px;
+    height: 450px;
+    margin: 20px auto;
+    border: 3px solid #333;
+    border-radius: 5px;
+    position: relative; /* Needed for the pause overlay */
+}
+
+/* This class will hide the numbers in the grid when paused */
+.paused .cell, .paused .cell.given, .paused .cell.correct-user-entry {
+    color: transparent;
+    background-color: #f0f0f0;
+}
+
+/* Also disable inputs and hide their text when paused */
+.paused .cell input, .paused .cell input.invalid {
+    pointer-events: none;
+    color: transparent;
+}
+
+/* Disable inputs when game is over */
+.game-over .cell input {
+    pointer-events: none;
+}
+
+.cell {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    box-sizing: border-box;
+}
+
+.cell input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    font-size: inherit;
+    padding: 0;
+    color: #007bff;
+    /* Hide spin buttons on number inputs for Firefox */
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/* Hide spin buttons on number inputs for Chrome, Safari, Edge, Opera */
+.cell input::-webkit-outer-spin-button,
+.cell input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.cell input:focus {
+    outline: none;
+    background-color: #e8f0fe;
+}
+
+.cell input.invalid {
+    background-color: #fde8e8;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.cell.given {
+    background-color: #f8f9fa;
+    color: #343a40;
+    font-weight: bold;
+}
+
+.cell.correct-user-entry {
+    color: #28a745; /* A nice green for correct answers */
+    font-weight: bold;
+    background-color: #f0fff4; /* A very light green background */
+}
+
+.cell.highlighted {
+    background-color: #e8f0fe; /* A very light blue for highlighting row/col */
+}
+
+.cell.selected {
+    background-color: #b3d4ff; /* A darker blue for the selected cell */
+}
+
+/* Ensure selected/highlighted inputs also get the background color */
+.cell.highlighted input,
+.cell.selected input {
+    background-color: transparent;
+}
+
+/* Add thicker borders for the 3x3 subgrids */
+.cell:nth-child(9n-6),
+.cell:nth-child(9n-3) {
+    border-right: 2px solid #333; /* Thicker border for columns 3 & 6 */
+}
+ 
+/* Thicker border for rows 3 & 6 */
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid #333;
+}
+
+#setup-game {
+    margin-bottom: 15px;
+}
+
+.difficulty-selector {
+    font-size: 1.1em;
+}
+
+.difficulty-selector label {
+    margin-right: 10px;
+    font-weight: 500;
+    color: #555;
+}
+
+.difficulty-selector select {
+    padding: 5px 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+}
+
+#controls {
+    margin-top: 20px;
+}
+
+#controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#controls button:hover {
+    background-color: #0056b3;
+}
+
+#pause-btn {
+    background-color: #ffc107;
+}
+#pause-btn:hover {
+    background-color: #e0a800;
+}
+
+#reset-btn {
+    background-color: #6c757d;
+}
+#reset-btn:hover {
+    background-color: #5a6268;
+}
+
+#print-btn {
+    background-color: #17a2b8;
+}
+#print-btn:hover {
+    background-color: #138496;
+}
+
+/* --- Opponent Progress Styles --- */
+#opponent-container {
+    width: 200px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+#opponent-container.hidden {
+    display: none;
+}
+
+#opponent-container h2 {
+    font-size: 1.2em;
+    margin-top: 0;
+    color: #555;
+}
+
+#opponent-progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+#opponent-progress {
+    width: 0%;
+    height: 100%;
+    background-color: #28a745;
+    transition: width 0.5s ease;
+}
+
+/* --- Custom Alert Modal Styles --- */
+#alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#alert-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.alert-message {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 300px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: scale(1);
+    transition: transform 0.3s ease-in-out;
+}
+
+#alert-overlay.hidden .alert-message {
+    transform: scale(0.9);
+}
+
+.alert-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-message button {
+    display: block;
+    margin: 10px auto 0;
+    padding: 8px 16px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+/* Styles for the name prompt in the alert */
+.alert-message .prompt-text {
+    margin: 8px 0;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.alert-message input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    width: 80%;
+}
+
+/* --- Print Styles --- */
+@media print {
+    @page {
+        size: A4;
+        margin: 0; /* Removes browser-default headers and footers */
+    }
+
+    body {
+        background-color: white;
+        font-size: 12pt;
+    }
+
+    /* Hide everything except the main wrapper for the game */
+    body > *:not(#main-wrapper) {
+        display: none;
+    }
+
+    /* Show the main wrapper and game container */
+    #main-wrapper,
+    #game-container {
+        display: block;
+        box-shadow: none;
+        border: none; /* Remove web-only shadows and borders */
+        margin: 1cm auto; /* Add margin to center the container on the page */
+        text-align: center;
+    }
+
+    /* Show the title, but hide other controls */
+    h1 {
+        display: block;
+        color: black;
+    }
+    #stats-container, #controls, #home-btn {
+        display: none;
+    }
+
+    /* Style the grid to be a fixed size and centered */
+    #sudoku-grid {
+        width: 16.2cm; /* 9 cells * 1.8cm */
+        height: 16.2cm;
+        margin: 1cm auto;
+        border: 3px solid black;
+    }
+
+    /* Style cells for printing */
+    .cell {
+        border: 1px solid #aaa;
+        color: black;
+        font-size: 2em; /* Larger font for better readability on paper */
+        /* Force browsers to print background colors and colors */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Re-apply thicker borders for sub-grids */
+    .cell:nth-child(9n-6),
+    .cell:nth-child(9n-3) {
+        border-right: 2px solid black;
+    }
+    .cell:nth-child(n+19):nth-child(-n+27),
+    .cell:nth-child(n+46):nth-child(-n+54) {
+        border-bottom: 2px solid black;
+    }
+
+    /* Hide input fields, just show the numbers */
+    .cell input {
+        display: none;
+    }
+
+    /* Make sure the numbers in the cells are visible */
+    .cell.given, .cell.correct-user-entry, .cell {
+        color: black !important;
+        background-color: white !important;
+    }
+
+    /* Ensure user-entered correct numbers are printed in their color */
+    .cell.correct-user-entry {
+        color: #28a745;
+    }
+}
+
+/* --- Responsive Styles for Mobile --- */
+@media (max-width: 500px) {
+    body {
+        align-items: flex-start; /* Align container to the top */
+        padding-top: 15px;
+    }
+
+    #main-wrapper {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    #opponent-container {
+        width: 90%;
+    }
+
+    #game-container {
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    #stats-container {
+        max-width: 100%;
+    }
+
+    #timer {
+        font-size: 1.5em;
+    }
+
+    #mistakes {
+        font-size: 1em;
+    }
+
+    #sudoku-grid {
+        /* Scale grid to fit screen width with some padding */
+        width: 95vw;
+        height: 95vw;
+        max-width: 450px; /* Keep original max size */
+        max-height: 450px;
+    }
+
+    .cell {
+        font-size: 1.2em;
+    }
+
+    #controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+}

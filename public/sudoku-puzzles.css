@@ -1,0 +1,53 @@
+/* Styles for the generated Word document with puzzles */
+@page {
+    size: A4;
+    margin: 1cm; /* Set a margin for the entire page */
+}
+
+body {
+    font-family: sans-serif;
+    font-size: 12pt;
+    background-color: white;
+}
+
+h1, h2 {
+    text-align: center;
+    text-transform: capitalize;
+    color: black;
+}
+
+.sudoku-print-grid {
+    border-collapse: collapse;
+    margin: 1cm auto;
+    border: 3px solid black; /* Main outer border */
+    width: 16.2cm; /* 9 cells * 1.8cm */
+    height: 16.2cm;
+}
+
+.sudoku-print-grid td {
+    width: 1.8cm;
+    height: 1.8cm;
+    border: 1px solid #aaa; /* Thin inner borders */
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+/* --- Sub-grid Border Logic --- */
+
+/* Thicker horizontal borders for rows 3 & 6 */
+.sudoku-print-grid tr:nth-child(3),
+.sudoku-print-grid tr:nth-child(6) {
+    border-bottom: 2px solid black;
+}
+
+/* Thicker vertical borders for columns 3 & 6 */
+.sudoku-print-grid td:nth-child(3),
+.sudoku-print-grid td:nth-child(6) {
+    border-right: 2px solid black;
+}
+
+.page-break {
+    page-break-after: always;
+}
