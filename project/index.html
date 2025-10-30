@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku - Start Game</title>
+    <link rel="stylesheet" href="sudoku-puzzles.css" media="print">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column; /* Allow items to stack vertically */
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #start-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 20px; /* Add space between start and scoreboard */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #multiplayer-container {
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px 40px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        #generate-puzzles-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        #generate-puzzles-container h3 { margin-top: 0; color: #555; }
+        #generate-puzzles-container .multiplayer-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        #multiplayer-container h3 { margin-top: 0; color: #555; }
+        .multiplayer-section { margin: 20px 0; }
+        .multiplayer-section input {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            margin: 0 10px;
+        }
+        .multiplayer-section button {
+            padding: 10px 20px; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; background-color: #007bff; color: white; transition: background-color 0.3s;
+        }
+        .multiplayer-section button:hover { background-color: #0056b3; }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .difficulty-selector {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .difficulty-selector label {
+            margin-right: 10px;
+            font-weight: 500;
+            color: #555;
+        }
+        .difficulty-selector select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+        #start-btn {
+            padding: 12px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        #start-btn:hover {
+            background-color: #218838;
+        }
+
+        #scoreboard-container {
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #scoreboard-container h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        #scoreboard-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        #scoreboard-container th, #scoreboard-container td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #scoreboard-container th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+
+        #scoreboard-container td {
+            font-size: 0.95em;
+        }
+
+        #clear-scores-btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #dc3545;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        #clear-scores-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* --- Responsive Styles --- */
+        @media (max-width: 640px) {
+            body {
+                padding-top: 20px; /* Add some space at the top */
+            }
+            #start-container, #scoreboard-container {
+                width: 90%;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            h1 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            .difficulty-selector {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 25px;
+            }
+            .table-wrapper {
+                overflow-x: auto; /* Allow table to scroll horizontally */
+            }
+            #scoreboard-container th, #scoreboard-container td {
+                padding: 8px;
+                white-space: nowrap; /* Prevent text from wrapping in cells */
+            }
+            #scoreboard-container h2 {
+                font-size: 1.5em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="start-container">
+        <h1>Sudoku</h1>
+        <div class="difficulty-selector">
+            <label for="difficulty">Choose Difficulty:</label>
+            <select id="difficulty">
+                <option value="trivial">Trivial</option>
+                <option value="beginner">Beginner</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+                <option value="expert">Expert</option>
+                <option value="master">Master</option>
+                <option value="legendary">Legendary</option>
+                <option value="insane">Insane</option>
+            </select>
+        </div>
+        <button id="start-btn">Start Game</button>
+    </div>
+
+    <div id="start-container">
+        <h3>Daily Challenge</h3>
+        <button id="daily-challenge-btn">Play Today's Puzzle</button>
+    </div>
+
+    <div id="multiplayer-container">
+        <h3>Multiplayer Race</h3>
+        <div class="multiplayer-section">
+            <label for="multiplayer-difficulty">Difficulty:</label>
+            <select id="multiplayer-difficulty">
+                <option value="trivial">Trivial</option>
+                <option value="beginner">Beginner</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+                <option value="expert">Expert</option>
+                <option value="master">Master</option>
+                <option value="legendary">Legendary</option>
+                <option value="insane">Insane</option>
+            </select>
+        </div>
+        <div class="multiplayer-section">
+            <button id="create-game-btn">Create Game</button>
+        </div>
+        <div class="multiplayer-section">
+            <input type="text" id="game-id-input" placeholder="Enter Game ID">
+            <button id="join-game-btn">Join Game</button>
+        </div>
+    </div>
+    
+    <div id="generate-puzzles-container">
+        <h3>Generate Puzzles for Print</h3>
+        <div class="multiplayer-section">
+            <label for="puzzle-difficulty">Difficulty:</label>
+            <select id="puzzle-difficulty">
+                <option value="trivial">Trivial</option>
+                <option value="beginner">Beginner</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+                <option value="expert">Expert</option>
+                <option value="master">Master</option>
+                <option value="legendary">Legendary</option>
+                <option value="insane">Insane</option>
+            </select>
+
+            <label for="puzzle-count">Number of puzzles:</label>
+            <input type="number" id="puzzle-count" value="5" min="1" max="50" style="width: 60px;">
+            <button id="generate-puzzles-btn">Generate & Print</button>
+        </div>
+        <div id="generation-status" style="margin-top: 10px; min-height: 20px; color: #007bff;"></div>
+    </div>
+    <br><br>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Start Game Logic ---
+            document.getElementById('start-btn').addEventListener('click', () => {
+                const difficulty = document.getElementById('difficulty').value;
+                window.location.href = `sudoku.html?difficulty=${difficulty}`;
+            });
+
+            // --- Daily Challenge Logic ---
+            document.getElementById('daily-challenge-btn').addEventListener('click', () => {
+                window.location.href = `sudoku.html?mode=daily`;
+            });
+
+            // --- Multiplayer Logic ---
+            document.getElementById('create-game-btn').addEventListener('click', () => {
+                const difficulty = document.getElementById('multiplayer-difficulty').value;
+                const gameId = 'game-' + Math.random().toString(36).substr(2, 9); // Simple unique ID
+                window.location.href = `sudoku.html?mode=multiplayer&difficulty=${difficulty}&gameId=${gameId}`;
+            });
+
+            document.getElementById('join-game-btn').addEventListener('click', () => {
+                const gameId = document.getElementById('game-id-input').value.trim();
+                if (gameId) {
+                    window.location.href = `sudoku.html?mode=multiplayer&gameId=${gameId}`;
+                } else {
+                    alert('Please enter a Game ID to join.');
+                }
+            });
+
+            // --- Puzzle Generation Logic ---
+            const generatePuzzlesBtn = document.getElementById('generate-puzzles-btn');
+            const generationStatus = document.getElementById('generation-status');
+
+            const N = 9;
+            const DIFFICULTY_LEVELS = {
+                trivial: 1, beginner: 35, medium: 45, hard: 52,
+                expert: 57, master: 61, legendary: 63, insane: 64
+            };
+
+            function isSafe(board, row, col, num) {
+                for (let x = 0; x < N; x++) if (board[row][x] === num) return false;
+                for (let x = 0; x < N; x++) if (board[x][col] === num) return false;
+                const startRow = row - row % 3, startCol = col - col % 3;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (board[i + startRow][j + startCol] === num) return false;
+                    }
+                }
+                return true;
+            }
+
+            function solveSudoku(board) {
+                for (let i = 0; i < N; i++) {
+                    for (let j = 0; j < N; j++) {
+                        if (board[i][j] === 0) {
+                            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+                            for (let num of numbers) {
+                                if (isSafe(board, i, j, num)) {
+                                    board[i][j] = num;
+                                    if (solveSudoku(board)) return true;
+                                    board[i][j] = 0;
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function countSolutions(board) {
+                let count = 0;
+                function solve() {
+                    if (count > 1) return;
+                    for (let i = 0; i < N; i++) {
+                        for (let j = 0; j < N; j++) {
+                            if (board[i][j] === 0) {
+                                for (let num = 1; num <= 9; num++) {
+                                    if (isSafe(board, i, j, num)) {
+                                        board[i][j] = num;
+                                        solve();
+                                        board[i][j] = 0;
+                                    }
+                                }
+                                return;
+                            }
+                        }
+                    }
+                    count++;
+                }
+                solve();
+                return count;
+            }
+
+            function generatePuzzle(difficulty) {
+                const cellsToRemove = DIFFICULTY_LEVELS[difficulty] || 45;
+                let board = Array(N).fill(0).map(() => Array(N).fill(0));
+                solveSudoku(board);
+                const solution = JSON.parse(JSON.stringify(board));
+
+                let positions = [];
+                for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) positions.push([i, j]);
+                positions.sort(() => Math.random() - 0.5);
+
+                let puzzle = JSON.parse(JSON.stringify(solution));
+                let removedCount = 0;
+                for (const [row, col] of positions) {
+                    if (removedCount >= cellsToRemove) break;
+                    const temp = puzzle[row][col];
+                    puzzle[row][col] = 0;
+                    const tempBoard = JSON.parse(JSON.stringify(puzzle));
+                    if (countSolutions(tempBoard) !== 1) {
+                        puzzle[row][col] = temp;
+                    } else {
+                        removedCount++;
+                    }
+                }
+                return { puzzle, solution };
+            }
+
+            function createPuzzleHtml(puzzleData, index) {
+                const { puzzle, solution } = puzzleData;
+                let puzzleTable = `<div class="page-break"><h2>Puzzle ${index + 1}</h2><table class="sudoku-print-grid">`;
+                for (let r = 0; r < N; r++) {
+                    puzzleTable += '<tr>';
+                    for (let c = 0; c < N; c++) {
+                        puzzleTable += `<td>${puzzle[r][c] === 0 ? '' : puzzle[r][c]}</td>`;
+                    }
+                    puzzleTable += '</tr>';
+                }
+                puzzleTable += '</table></div>';
+
+                let solutionTable = `<div class="page-break"><h2>Puzzle ${index + 1} - Solution</h2><table class="sudoku-print-grid">`;
+                for (let r = 0; r < N; r++) {
+                    solutionTable += '<tr>';
+                    for (let c = 0; c < N; c++) {
+                        solutionTable += `<td>${solution[r][c]}</td>`;
+                    }
+                    solutionTable += '</tr>';
+                }
+                solutionTable += '</table></div>';
+
+                return { puzzleHtml: puzzleTable, solutionHtml: solutionTable };
+            }
+
+            generatePuzzlesBtn.addEventListener('click', () => {
+                const difficulty = document.getElementById('puzzle-difficulty').value;
+                const count = parseInt(document.getElementById('puzzle-count').value, 10);
+
+                if (isNaN(count) || count < 1 || count > 50) {
+                    alert('Please enter a number of puzzles between 1 and 50.');
+                    return;
+                }
+
+                generatePuzzlesBtn.disabled = true;
+                generationStatus.textContent = 'Generating puzzles... (this may take a moment)';
+
+                // Use setTimeout to allow the UI to update before the heavy work starts
+                setTimeout(() => {
+                    let allPuzzlesHtml = '';
+                    let allSolutionsHtml = '';
+
+                    for (let i = 0; i < count; i++) {
+                        const puzzleData = generatePuzzle(difficulty);
+                        const { puzzleHtml, solutionHtml } = createPuzzleHtml(puzzleData, i);
+                        allPuzzlesHtml += puzzleHtml;
+                        allSolutionsHtml += solutionHtml;
+                    }
+
+                    const finalHtml = `<!DOCTYPE html><html><head><title>Sudoku Puzzles (${difficulty})</title><link rel="stylesheet" href="sudoku-puzzles.css"></head><body><h1>Sudoku Puzzles (${difficulty})</h1>${allPuzzlesHtml}<hr style="page-break-after: always;"><h1>Solutions</h1>${allSolutionsHtml}</body></html>`;
+                    
+                    // Open a new window, write the HTML, and trigger the print dialog
+                    const printWindow = window.open('', '_blank');
+                    if (printWindow) {
+                        printWindow.document.write(finalHtml);
+                        printWindow.document.close(); // Necessary for some browsers to finish loading
+                        printWindow.focus(); // Focus the new window
+                        printWindow.print(); // Open the print dialog
+                    } else {
+                        alert('Please allow pop-ups for this site to print the puzzles.');
+                    }
+                    
+                    generatePuzzlesBtn.disabled = false;
+                    generationStatus.textContent = `${count} puzzles generated!`;
+                }, 10);
+            });
+
+            // --- Scoreboard Logic ---
+            const scoreboardBody = document.getElementById('scoreboard-body');
+            const clearScoresBtn = document.getElementById('clear-scores-btn');
+
+            function formatTime(timeInSeconds) {
+                const minutes = Math.floor(timeInSeconds / 60);
+                const seconds = timeInSeconds % 60;
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function loadScores() {
+                scoreboardBody.innerHTML = ''; // Clear existing scores
+                let scores;
+                try {
+                    scores = JSON.parse(localStorage.getItem('sudokuScores')) || [];
+                } catch (error) {
+                    console.error("Error reading scores from localStorage:", error);
+                    scores = [];
+                }
+
+                if (scores.length === 0) {
+                    scoreboardBody.innerHTML = '<tr><td colspan="5">No scores yet. Play a game to see your results!</td></tr>';
+                    clearScoresBtn.style.display = 'none';
+                    return;
+                }
+
+                // Sort scores: by difficulty, then by time, then by mistakes
+                const difficultyOrder = ['trivial', 'beginner', 'medium', 'hard', 'expert', 'master', 'legendary', 'insane'];
+                scores.sort((a, b) => {
+                    const diffA = difficultyOrder.indexOf(a.difficulty);
+                    const diffB = difficultyOrder.indexOf(b.difficulty);
+                    if (diffA !== diffB) return diffA - diffB;
+                    if (a.time !== b.time) return a.time - b.time;
+                    return a.mistakes - b.mistakes;
+                });
+
+                scores.forEach(score => {
+                    const row = document.createElement('tr');
+                    const date = new Date(score.date).toLocaleDateString();
+                    row.innerHTML = `
+                        <td>${escapeHtml(score.name)}</td>
+                        <td>${score.difficulty.charAt(0).toUpperCase() + score.difficulty.slice(1)}</td>
+                        <td>${formatTime(score.time)}</td>
+                        <td>${score.mistakes}</td>
+                        <td>${date}</td>
+                    `;
+                    scoreboardBody.appendChild(row);
+                });
+
+                clearScoresBtn.style.display = 'inline-block';
+            }
+
+            clearScoresBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all scores? This cannot be undone.')) {
+                    localStorage.removeItem('sudokuScores');
+                    loadScores(); // Refresh the display
+                }
+            });
+
+            // Simple HTML escaping function to prevent XSS
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            loadScores();
+        });
+    </script>
+    <div id="scoreboard-container">
+        <h2>Scoreboard</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Difficulty</th>
+                        <th>Time</th>
+                        <th>Mistakes</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreboard-body">
+                    <!-- Scores will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <button id="clear-scores-btn">Clear Scores</button>
+    </div>
+</body>
+</html>
