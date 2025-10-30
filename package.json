@@ -1,5 +1,12 @@
 {
+  "name": "sudoku-battle-server",
+  "version": "1.0.0",
+  "description": "A real-time multiplayer Sudoku server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "ws": "^8.18.3"
+    "ws": "^8.14.2"
   }
 }
