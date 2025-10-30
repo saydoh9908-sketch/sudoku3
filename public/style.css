@@ -1,0 +1,32 @@
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+#app { width: 100%; max-width: 500px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; }
+.screen { display: none; }
+.screen.active { display: block; text-align: center; }
+h1 { color: #1a2b4d; }
+button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px 0; transition: background-color 0.2s; }
+button:hover { background-color: #0056b3; }
+input, select { width: calc(100% - 20px); padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+.form-group { margin: 15px 0; text-align: left; }
+.divider { margin: 20px 0; font-weight: bold; }
+#status-message { margin-top: 15px; color: #d9534f; font-weight: bold; }
+
+/* Game Screen */
+.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+#connection-status { font-size: 0.9em; color: #888; }
+.progress-bars { display: flex; flex-direction: column; gap: 5px; }
+.progress-container { display: flex; align-items: center; gap: 10px; font-size: 0.9em; }
+.progress-bar { width: 100px; height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: #28a745; width: 0%; transition: width 0.3s ease; }
+
+#sudoku-board { display: grid; grid-template-columns: repeat(9, 1fr); gap: 1px; background-color: #333; border: 3px solid #333; }
+.sudoku-cell { background-color: #fff; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 1.5em; font-weight: bold; border: 1px solid #ddd; cursor: pointer; }
+.sudoku-cell:focus { outline: 2px solid #007bff; }
+.sudoku-cell.fixed { background-color: #e9ecef; color: #000; cursor: default; }
+.sudoku-cell.fixed:focus { outline: none; }
+.sudoku-cell.correct { color: #28a745; }
+.sudoku-cell.incorrect { color: #dc3545; }
+
+/* 3x3 section borders */
+.sudoku-cell:nth-child(3n) { border-right: 2px solid #333; }
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid #333; }
